@@ -6276,7 +6276,10 @@ void bot_ai::Regenerate()
                 addvalue = 0.0f;
 
             if (_botclass == BOT_CLASS_SPHYNX)
-                addvalue *= -1.f;
+                // modify by zpccode
+                // change normal reg
+                addvalue *= 1.f;
+                // modify end
 
             me->ModifyPower(POWER_MANA, int32(addvalue));
         }

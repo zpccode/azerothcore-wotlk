@@ -236,6 +236,7 @@ public:
 
         void CheckDrainMana(uint32 diff)
         {
+            /*
             if (DraincheckTimer > diff || Rand() > 40 || IAmFree() || !HasRole(BOT_ROLE_DPS) || IsCasting() ||
                 !IsSpellReady(DRAIN_MANA_1, diff, false) || me->GetPower(POWER_MANA) >= SPLASH_ATTACK_COST)
                 return;
@@ -252,6 +253,26 @@ public:
             Unit* target = Bcore::Containers::SelectRandomContainerElement(targets);
             if (doCast(target, GetSpell(DRAIN_MANA_1)))
                 return;
+                */
+            // modify by zpccode
+            // leech all mana from a drain target
+            if (DraincheckTimer > diff || Rand() > 40 || IAmFree() || !HasRole(BOT_ROLE_DPS) || IsCasting() ||
+                !IsSpellReady(DRAIN_MANA_1, diff, false))
+                return;
+
+            DraincheckTimer = urand(750, 1500);
+            Unit* drainTarget = FindDrainTarget(CalcSpellMaxRange(DRAIN_MANA_1));
+
+            if (!drainTarget)
+            {
+                Unit* u = me->GetVictim();
+                if (u && u->GetPowerType() == POWER_MANA && u->GetPower(POWER_MANA) > 5 && GetManaPCT(u) >= 5)
+                    drainTarget = u;
+            }
+
+            if (drainTarget && doCast(drainTarget, GetSpell(DRAIN_MANA_1)))
+                return;
+            // modify end
         }
 
         void CheckReplenishHealth(uint32 diff)
