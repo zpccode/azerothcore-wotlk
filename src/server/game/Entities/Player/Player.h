@@ -64,6 +64,10 @@ class PlayerSocial;
 class SpellCastTargets;
 class UpdateMask;
 
+// NpcBot mod
+class BotMgr;
+// end NpcBot mod
+
 typedef std::deque<Mail*> PlayerMails;
 typedef void(*bgZoneRef)(Battleground*, WorldPacket&);
 
@@ -1081,6 +1085,17 @@ class Player : public Unit, public GridObject<Player>
 public:
     explicit Player(WorldSession* session);
     ~Player() override;
+    /*****************************************************************/
+    /***                        NPCBOT SYSTEM                      ***/
+    /*****************************************************************/
+    BotMgr* GetBotMgr() const { return _botMgr; }
+    bool HaveBot() const;
+    uint8 GetNpcBotsCount() const;
+    void RemoveAllBots(uint8 removetype = 0);
+    void UpdatePhaseForBots();
+    /*****************************************************************/
+    /***                      END NPCBOT SYSTEM                    ***/
+    /*****************************************************************/
 
     void CleanupsBeforeDelete(bool finalCleanup = true) override;
 
@@ -2918,6 +2933,14 @@ protected:
     bool m_needZoneUpdate;
 
 private:
+    /*****************************************************************/
+    /***                        NPCBOT SYSTEM                      ***/
+    /*****************************************************************/
+    BotMgr* _botMgr;
+    /*****************************************************************/
+    /***                      END NPCBOT SYSTEM                    ***/
+    /*****************************************************************/
+
     // internal common parts for CanStore/StoreItem functions
     InventoryResult CanStoreItem_InSpecificSlot(uint8 bag, uint8 slot, ItemPosCountVec& dest, ItemTemplate const* pProto, uint32& count, bool swap, Item* pSrcItem) const;
     InventoryResult CanStoreItem_InBag(uint8 bag, ItemPosCountVec& dest, ItemTemplate const* pProto, uint32& count, bool merge, bool non_specialized, Item* pSrcItem, uint8 skip_bag, uint8 skip_slot) const;
